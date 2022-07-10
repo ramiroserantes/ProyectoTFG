@@ -2,20 +2,40 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.proyect</groupId>
+    <artifactId>TFG</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>TFG</name>
+    <description>Demo project for Spring Boot</description>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.proyect</groupId>
-    <artifactId>TFG</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>TFG</name>
-    <description>Demo project for Spring Boot</description>
+
     <properties>
+
+        <dataSource.user>tfg</dataSource.user>
+        <dataSource.password>tfg</dataSource.password>
+        <testDataSource.user>${dataSource.user}</testDataSource.user>
+        <testDataSource.password>${dataSource.password}</testDataSource.password>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <java.version>11</java.version>
+
+        <jjwt.version>0.9.1</jjwt.version>
+
+        <sqlPlugin.version>1.5</sqlPlugin.version>
+
     </properties>
+
     <profiles>
         <profile>
             <id>mysql</id>
@@ -24,22 +44,15 @@
             </activation>
             <properties>
 
-                <dataSource.user>pa</dataSource.user>
-                <dataSource.password>pa</dataSource.password>
-                <testDataSource.user>${dataSource.user}</testDataSource.user>
-                <testDataSource.password>${dataSource.password}</testDataSource.password>
-                <sqlPlugin.version>1.5</sqlPlugin.version>
-                <jjwt.version>0.9.1</jjwt.version>
-                <!-- JDBC driver properties -->
                 <jdbcDriver.groupId>mysql</jdbcDriver.groupId>
                 <jdbcDriver.artifactId>mysql-connector-java</jdbcDriver.artifactId>
                 <jdbcDriver.version>8.0.20</jdbcDriver.version>
                 <jdbcDriver.className>com.mysql.cj.jdbc.Driver</jdbcDriver.className>
 
-                <!--  Data source properties -->
-                <dataSource.baseUrl>jdbc:mysql://localhost/proyect</dataSource.baseUrl>
+                <dataSource.baseUrl>jdbc:mysql://localhost/tfg</dataSource.baseUrl>
                 <dataSource.url>${dataSource.baseUrl}?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</dataSource.url>
                 <testDataSource.url>${dataSource.baseUrl}test?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</testDataSource.url>
+
             </properties>
         </profile>
     </profiles>
@@ -86,10 +99,6 @@
 
     <build>
 
-        <!-- When using spring-boot-starter-parent, files under
-             "src/main/resources" are automatically filtered and
-             "@propertyName@" notation is used instead of "${propertyName}". -->
-
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
@@ -104,15 +113,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!--
-                 - Configuration specifies onError="continue" since SQL scripts
-                   try to drop tables before creating them (which causes errors
-                   if such tables do not exist yet).
-
-                 - Configuration specifies autocommit="true" since some drivers
-                   (e.g the PostgreSQL JDBC 2 driver) do not commit changes if
-                   some error ocurrs.
-            -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sql-maven-plugin</artifactId>
@@ -124,11 +124,34 @@
                         <version>${jdbcDriver.version}</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <driver>${jdbcDriver.className}</driver>
+                    <url>${dataSource.url}</url>
+                    <username>${dataSource.user}</username>
+                    <password>${dataSource.password}</password>
+                    <autocommit>true</autocommit>
+                    <onError>continue</onError>
+                    <orderFile>ascending</orderFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-tables-for-testing</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <driver>${jdbcDriver.className}</driver>
+                            <url>${testDataSource.url}</url>
+                            <username>${testDataSource.user}</username>
+                            <password>${testDataSource.password}</password>
+                            <autocommit>true</autocommit>
+                            <onError>continue</onError>
 
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
-
         </plugins>
-
     </build>
-
 </project>
