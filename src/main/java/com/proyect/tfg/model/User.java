@@ -1,4 +1,4 @@
-package com.proyect.tfg.model.entities;
+package com.proyect.tfg.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,10 +29,9 @@ public class User {
 
     public User() {}
 
-    public User(Long id, String userName, String passWord, String email, WebRole webRole, Long coins, Long premiumCoins,
+    public User(String userName, String passWord, String email, WebRole webRole, Long coins, Long premiumCoins,
                 Long donatedMoney, LocalDateTime registeredDate, LocalDateTime lasTimeOnline, int reputation, int vipRole,
                 Long rank, String link, boolean verified) {
-        this.id = id;
         this.userName = userName;
         this.passWord = passWord;
         this.email = email;
@@ -108,4 +107,6 @@ public class User {
     public boolean isVerified() { return verified; }
 
     public void setVerified(boolean verified) { this.verified = verified; }
+
+
 }
