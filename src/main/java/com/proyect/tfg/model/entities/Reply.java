@@ -1,13 +1,11 @@
-package com.proyect.tfg.model;
+package com.proyect.tfg.model.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 public class Reply {
 
-    @Id
     private Long id;
 
     private String content;
@@ -15,6 +13,9 @@ public class Reply {
 
     private LocalDateTime postedDate;
     private LocalDateTime editedDate;
+
+    private Topic topic;
+    private User user;
 
     public Reply () {}
 
@@ -26,6 +27,8 @@ public class Reply {
         this.editedDate = editedDate;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }
@@ -45,4 +48,18 @@ public class Reply {
     public LocalDateTime getEditedDate() { return editedDate; }
 
     public void setEditedDate(LocalDateTime editedDate) { this.editedDate = editedDate; }
+
+    /**************************************** Relations ************************************************************/
+
+    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "topicId")
+    public Topic getTopic() { return topic; }
+
+    public void setTopic(Topic topic) { this.topic = topic; }
+
+    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    public User getUser() { return user; }
+
+    public void setUser(User user) { this.user = user; }
 }

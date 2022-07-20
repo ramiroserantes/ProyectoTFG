@@ -1,13 +1,11 @@
-package com.proyect.tfg.model;
+package com.proyect.tfg.model.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 public class Product {
 
-    @Id
     private Long id;
 
     private Boolean isQuantityLimited;
@@ -18,6 +16,8 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal discount;
+
+    private Category category;
 
     public Product () {}
 
@@ -31,6 +31,8 @@ public class Product {
         this.discount = discount;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }
@@ -58,4 +60,12 @@ public class Product {
     public BigDecimal getDiscount() { return discount; }
 
     public void setDiscount(BigDecimal discount) { this.discount = discount; }
+
+    /**************************************** Relations ************************************************************/
+
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    @JoinColumn(name="categoryId")
+    public Category getCategory() { return category; }
+
+    public void setCategory(Category category) { this.category = category; }
 }

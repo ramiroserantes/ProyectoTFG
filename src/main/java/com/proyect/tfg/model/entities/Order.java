@@ -1,16 +1,17 @@
-package com.proyect.tfg.model;
+package com.proyect.tfg.model.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "OrderTable")
 public class Order {
 
     public enum Status {ACTIVE, CANCELED, EXPIRED};
     public enum OrderType {SELLPLATINUM, BUYPLATINUM};
 
-    @Id
     private Long id;
 
     private LocalDateTime creationDate;
@@ -18,16 +19,20 @@ public class Order {
 
     private int requiredAmount;
     private int adquiredAmount;
-    private Long pricePerUnit;
+    private int pricePerUnit;
 
     private Status status;
     private OrderType orderType;
+
+    private Set<Transaction> transactions = new HashSet<>();
+
+    private User user;
 
     public Order () {}
 
     public Order(LocalDateTime creationDate,
                  LocalDateTime expirationDate, int requiredAmount, int adquiredAmount,
-                 Long pricePerUnit, Status status, OrderType orderType) {
+                 int pricePerUnit, Status status, OrderType orderType) {
         this.creationDate = creationDate;
         this.expirationDate = expirationDate;
         this.requiredAmount = requiredAmount;
@@ -37,6 +42,8 @@ public class Order {
         this.orderType = orderType;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }
@@ -57,9 +64,9 @@ public class Order {
 
     public void setAdquiredAmount(int adquiredAmount) { this.adquiredAmount = adquiredAmount; }
 
-    public Long getPricePerUnit() { return pricePerUnit; }
+    public int getPricePerUnit() { return pricePerUnit; }
 
-    public void setPricePerUnit(Long pricePerUnit) { this.pricePerUnit = pricePerUnit; }
+    public void setPricePerUnit(int pricePerUnit) { this.pricePerUnit = pricePerUnit; }
 
     public Status getStatus() { return status; }
 
@@ -69,4 +76,16 @@ public class Order {
 
     public void setOrderType(OrderType orderType) { this.orderType = orderType; }
 
+    /**************************************** Relations ************************************************************/
+
+    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    public User getUser() { return user; }
+
+    public void setUser(User user) { this.user = user; }
+
+    @OneToMany(mappedBy = "order")
+    public Set<Transaction> getTransactions() { return transactions; }
+
+    public void setTransactions(Set<Transaction> transactions) { this.transactions = transactions; }
 }

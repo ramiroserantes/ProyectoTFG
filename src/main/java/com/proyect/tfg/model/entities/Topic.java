@@ -1,13 +1,13 @@
-package com.proyect.tfg.model;
+package com.proyect.tfg.model.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Topic {
 
-    @Id
     private Long id;
 
     private LocalDateTime postedDate;
@@ -15,6 +15,10 @@ public class Topic {
     private String content;
 
     private int views;
+
+    private User user;
+    private TopicCategory topicCategory;
+    private Set<Reply> replies = new HashSet<>();
 
     public Topic () {}
 
@@ -25,6 +29,8 @@ public class Topic {
         this.views = views;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }
@@ -44,4 +50,23 @@ public class Topic {
     public int getViews() { return views; }
 
     public void setViews(int views) { this.views = views; }
+
+    /**************************************** Relations ************************************************************/
+
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    @JoinColumn(name="userId")
+    public User getUser() { return user; }
+
+    public void setUser(User user) { this.user = user; }
+
+    @ManyToOne(optional=false, fetch=FetchType.LAZY)
+    @JoinColumn(name="topicCategoryId")
+    public TopicCategory getTopicCategory() { return topicCategory; }
+
+    public void setTopicCategory(TopicCategory topicCategory) { this.topicCategory = topicCategory; }
+
+    @OneToMany(mappedBy = "topic")
+    public Set<Reply> getReplies() { return replies; }
+
+    public void setReplies(Set<Reply> replies) { this.replies = replies; }
 }

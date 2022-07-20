@@ -1,7 +1,6 @@
-package com.proyect.tfg.model;
+package com.proyect.tfg.model.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
@@ -10,6 +9,8 @@ public class Stats {
     @Id
     private String statName;
     private BigDecimal statValue;
+
+    private User user;
 
     public Stats () {}
 
@@ -25,4 +26,13 @@ public class Stats {
     public BigDecimal getStatValue() { return statValue; }
 
     public void setStatValue(BigDecimal statValue) { this.statValue = statValue; }
+
+    /**************************************** Relations ************************************************************/
+
+    @ManyToOne(optional=false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    public User getUser() { return user; }
+
+    public void setUser(User user) { this.user = user; }
+
 }

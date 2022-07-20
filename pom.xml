@@ -51,6 +51,7 @@
 
                 <dataSource.baseUrl>jdbc:mysql://localhost/tfg</dataSource.baseUrl>
                 <dataSource.url>${dataSource.baseUrl}?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</dataSource.url>
+                <dataSource.createTablesScript>MySqlCreateTables.sql</dataSource.createTablesScript>
                 <testDataSource.url>${dataSource.baseUrl}test?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</testDataSource.url>
 
             </properties>
@@ -132,6 +133,14 @@
                     <autocommit>true</autocommit>
                     <onError>continue</onError>
                     <orderFile>ascending</orderFile>
+                    <fileset>
+                        <basedir>${basedir}</basedir>
+                        <includes>
+                            <include>
+                                src/main/sql/${dataSource.createTablesScript}
+                            </include>
+                        </includes>
+                    </fileset>
                 </configuration>
                 <executions>
                     <execution>
@@ -147,7 +156,14 @@
                             <password>${testDataSource.password}</password>
                             <autocommit>true</autocommit>
                             <onError>continue</onError>
-
+                            <fileset>
+                                <basedir>${basedir}</basedir>
+                                <includes>
+                                    <include>
+                                        src/sql/${dataSource.createTablesScript}
+                                    </include>
+                                </includes>
+                            </fileset>
                         </configuration>
                     </execution>
                 </executions>

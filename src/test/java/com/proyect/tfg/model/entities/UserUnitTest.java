@@ -1,6 +1,5 @@
 package com.proyect.tfg.model.entities;
 
-import com.proyect.tfg.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

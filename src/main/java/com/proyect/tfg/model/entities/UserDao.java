@@ -1,4 +1,4 @@
-package com.proyect.tfg.model;
+package com.proyect.tfg.model.entities;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
