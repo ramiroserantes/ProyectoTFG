@@ -113,6 +113,7 @@ public class User {
 
     public void setVipRole(int vipRole) { this.vipRole = vipRole; }
 
+    @Column(name = "ranking")
     public Long getRank() { return rank; }
 
     public void setRank(Long rank) { this.rank = rank; }
