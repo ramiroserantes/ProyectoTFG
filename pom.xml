@@ -51,8 +51,8 @@
 
                 <dataSource.baseUrl>jdbc:mysql://localhost/tfg</dataSource.baseUrl>
                 <dataSource.url>${dataSource.baseUrl}?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</dataSource.url>
-                <dataSource.createTablesScript>MySqlCreateTables.sql</dataSource.createTablesScript>
                 <testDataSource.url>${dataSource.baseUrl}test?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Madrid</testDataSource.url>
+                <dataSource.createTablesScript>MySqlCreateTables.sql</dataSource.createTablesScript>
 
             </properties>
         </profile>
@@ -137,7 +137,7 @@
                         <basedir>${basedir}</basedir>
                         <includes>
                             <include>
-                                src/main/sql/${dataSource.createTablesScript}
+                                src/sql/${dataSource.createTablesScript}
                             </include>
                         </includes>
                     </fileset>
