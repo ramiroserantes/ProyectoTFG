@@ -26,19 +26,27 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public Block<Order> findOrdersByUser(Long userId, int page, int size) throws InstanceNotFoundException {
 
+        /** Comprobamos los datos de entrada **/
+
         permissionChecker.checkUserExists(userId);
 
-        Slice<Order> slice = orderDao.findByUserIdOrderByCreationDateAscStatusAscOrderTypeAsc(userId,
-                PageRequest.of(page, size));
+        /** Comprobamos si el usuario tiene ordenes expiradas y en ese caso las actualizamos (no es necesario hacer un update por
+         * la first-level cache de spring) **/
 
-        List<Order> orders = slice.getContent();
+        List<Order> updateOrders = orderDao.findByUserIdAndStatusAndExpirationDateBefore(userId,
+                Order.Status.ACTIVE, LocalDateTime.now());
 
-        for (Order o : orders) {
-            if(o.getExpirationDate().isBefore(LocalDateTime.now()) && (o.getStatus() == Order.Status.ACTIVE)) {
+        if(!updateOrders.isEmpty()) {
+            for (Order o: updateOrders) {
                 o.setStatus(Order.Status.EXPIRED);
             }
         }
 
-        return new Block<>(orders, slice.hasNext());
+        /** Ahora que ya sabemos que todas las ordenes están actualizadas en su estado correcamente las buscamos paginadas **/
+
+        Slice<Order> slice = orderDao.findOrdersByUser(userId,
+                PageRequest.of(page, size));
+
+        return new Block<>(slice.getContent(), slice.hasNext());
     }
 }
