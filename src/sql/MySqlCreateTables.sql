@@ -32,7 +32,9 @@ CREATE TABLE User (
     lastTimeOnline DATETIME NOT NULL,
     reputation int NOT NULL,
     vipRole int NOT NULL,
+    link VARCHAR(60) NOT NULL,
     ranking BIGINT NOT NULL,
+    verified TINYINT NOT NULL,
 
     CONSTRAINT UserPK PRIMARY KEY (id),
     CONSTRAINT UserNameUniqueKey UNIQUE (userName)
